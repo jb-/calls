@@ -43,6 +43,7 @@ export default class Index extends Component  {
   }
 
   _reformat(data, time) { 
+    // console.log(time);
     return {
       calls : flow(
         split('\n'),
@@ -57,7 +58,8 @@ export default class Index extends Component  {
           };
         }),
         filter(obj => {
-          return obj.time < (time+1) * 10000 && isNumber(obj.lng) && obj.success;
+          return obj.time < (+time+1) * 10000 && obj.time >= +time * 10000 &&
+            isNumber(obj.lng) && obj.success;
         }),
         map(obj => {
           return {
@@ -100,7 +102,7 @@ export default class Index extends Component  {
 
     return (
       <div>
-        <select style={{height: '30px', width: '600px', margin:'20px'}}
+        <select style={{height: '30px', width: '97%', margin:'20px'}}
           value={this.state.time} onChange={this._onChanged.bind(this)} >
           {map(option => (<option key={option} value={option}>{option}</option>))(this.options)}
         </select>
