@@ -91,8 +91,6 @@ export default class Index extends Component  {
   componentWillMount() {
     this._getData('../static/calls', 0);
   }
-  componentDidMount() {
-  }
 
   _onChanged(event) {
     this._getData('../static/calls', event.target.value);

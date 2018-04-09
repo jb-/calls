@@ -28,6 +28,16 @@ class Map extends Component {
       return call.success === "t" ? sum + 1 : sum;
     }, 0)(geohash) / geohash.length;
   }
+
+  _generateHexColor(prob) {
+    let red = (prob-1) * (-255);
+    let redHex = red.toString(16).substring(0,2);
+    let blue = (prob) * (255);
+    let blueHex = blue.toString(16).substring(0,2);
+    console.log('#'+redHex+'00'+blueHex);
+    return '#'+redHex+'00'+blueHex;
+  }
+
   _renderTiles(calls) {    
     const hashes = flow(
       map(call => {
@@ -51,7 +61,7 @@ class Map extends Component {
       }),
       filter(values => values.trial > 1)
     )(calls);
-    const {trial : maxTrial} = maxBy(hash => hash.trial)(hashes);
+    // const {trial : maxTrial} = maxBy(hash => hash.trial)(hashes);
 
     return (
       <div>
@@ -63,18 +73,20 @@ class Map extends Component {
             
           );
           let prob = hash.probability;
+          let color = this._generateHexColor(prob);
           // console.log(postBounds);
           return (
             <Rectangle className="tiles"
               bounds={postBounds}
               key={hash.geohash}
-              options={{style : {
+              defaultOptions={{
                 // strokeColor: '#3333AA',
                 strokeOpacity: 0,
-                strokeWeight: 0,
-                fillColor: 'rgb( 255, 0, 0 )',
-                fillOpacity: Math.log(hash.trial)/Math.log(maxTrial)
-              }}}/> 
+                strokeWeight: '1px',
+                fillColor: color,
+                fillOpacity: 0.5
+                // fillOpacity: Math.log(hash.trial)/Math.log(maxTrial)
+              }}/> 
           );
         }
         )(hashes)}
