@@ -34,11 +34,15 @@ class Map extends Component {
     let redHex = red.toString(16).substring(0,2);
     let blue = (prob) * (255);
     let blueHex = blue.toString(16).substring(0,2);
-    console.log('#'+redHex+'00'+blueHex);
     return '#'+redHex+'00'+blueHex;
   }
 
-  _renderTiles(calls) {    
+  _strokeOpacity(trials) {
+    return trials > 60 ? 1 : 0;
+  }
+
+  _renderTiles(calls) {
+    let maxTrial = 0;
     const hashes = flow(
       map(call => {
         return {
@@ -53,6 +57,9 @@ class Map extends Component {
         return result;
       }, {}),
       map((value) => {
+        if(maxTrial < value.length) {
+          maxTrial = value.length;
+        }
         return {
           geohash: value[0]['geohash'],
           probability: this._probability(value), 
@@ -61,8 +68,7 @@ class Map extends Component {
       }),
       filter(values => values.trial > 1)
     )(calls);
-    // const {trial : maxTrial} = maxBy(hash => hash.trial)(hashes);
-
+    
     return (
       <div>
         {map(hash => {
@@ -74,22 +80,20 @@ class Map extends Component {
           );
           let prob = hash.probability;
           let color = this._generateHexColor(prob);
-          // console.log(postBounds);
+          let strokeOpacity = this._strokeOpacity(hash.trial);
+          let fillOpacity = Math.log(hash.trial)/Math.log(maxTrial);
           return (
-            <Rectangle className="tiles"
+           <Rectangle className="tiles"
               bounds={postBounds}
               key={hash.geohash}
               defaultOptions={{
-                // strokeColor: '#3333AA',
-                strokeOpacity: 0,
+                storkeColor: color,
+                strokeOpacity: strokeOpacity,
                 strokeWeight: '1px',
                 fillColor: color,
-                fillOpacity: 0.5
-                // fillOpacity: Math.log(hash.trial)/Math.log(maxTrial)
-              }}/> 
-          );
-        }
-        )(hashes)}
+                fillOpacity: fillOpacity*1.1}}/>
+            );
+          })(hashes)}
       </div>
     );
   }
