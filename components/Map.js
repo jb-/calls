@@ -93,7 +93,7 @@ class Map extends Component {
                 strokeOpacity: strokeOpacity,
                 strokeWeight: '1px',
                 fillColor: color,
-                fillOpacity: fillOpacity*1.1}}/>
+                fillOpacity: fillOpacity}}/>
             );
           })(hashes)}
       </div>
