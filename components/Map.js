@@ -30,10 +30,10 @@ class Map extends Component {
   }
 
   _generateHexColor(prob) {
-    let red = (prob-1) * (-255);
+    let red = parseInt((prob-1) * (-255));
     let redHex = red.toString(16).substring(0,2);
     if (redHex.length === 1) redHex = '0' + redHex;
-    let blue = (prob) * (255);
+    let blue = parseInt((prob) * (255));
     let blueHex = blue.toString(16).substring(0,2);
     if (blueHex.length === 1) blueHex = '0' + blueHex;
     return '#'+redHex+'00'+blueHex;
